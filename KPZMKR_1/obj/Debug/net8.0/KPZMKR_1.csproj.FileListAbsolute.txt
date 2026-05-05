@@ -12,3 +12,4 @@ C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\refint\KPZMKR_1.
 C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.pdb
 C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.genruntimeconfig.cache
 C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\ref\KPZMKR_1.dll
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.sourcelink.json
