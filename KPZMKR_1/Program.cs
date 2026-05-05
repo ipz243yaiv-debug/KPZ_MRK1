@@ -43,6 +43,21 @@ namespace task5
         }
     }
 
+    interface INodeState
+    {
+        string Render(LightElementNode node);
+    }
+
+    class VisibleState : INodeState
+    {
+        public string Render(LightElementNode node) => node.BaseRender();
+    }
+
+    class HiddenState : INodeState
+    {
+        public string Render(LightElementNode node) => "";
+    }
+
     abstract class LightNode
     {
         public abstract void Accept(IVisitor visitor);
@@ -78,6 +93,7 @@ namespace task5
         public string TagName { get; }
         public List<string> CssClasses { get; } = new List<string>();
         private List<LightNode> _children = new List<LightNode>();
+        public INodeState CurrentState { get; set; } = new VisibleState();
 
         public LightElementNode(string tagName) => TagName = tagName;
 
@@ -88,7 +104,6 @@ namespace task5
             visitor.Visit(this);
             foreach (var child in _children) child.Accept(visitor);
         }
-
 
         public IEnumerable<LightNode> GetDepthFirst()
         {
@@ -116,11 +131,13 @@ namespace task5
             return sb.ToString();
         }
 
-        public override string OuterHTML()
+        public string BaseRender()
         {
             string classes = CssClasses.Count > 0 ? $" class=\"{string.Join(" ", CssClasses)}\"" : "";
             return $"<{TagName}{classes}>{InnerHTML()}</{TagName}>";
         }
+
+        public override string OuterHTML() => CurrentState.Render(this);
     }
 
     class Program
@@ -144,7 +161,6 @@ namespace task5
             addListClass.Execute();
             addRedText.Execute();
 
-
             var stats = new StatisticsVisitor();
             list.Accept(stats);
 
@@ -157,6 +173,10 @@ namespace task5
                 if (node is LightElementNode el) Console.WriteLine($"Знайдено тег: {el.TagName}");
             }
 
+            Console.WriteLine($"\nРендеринг видимий:");
+            Console.WriteLine(list.Render());
+
+            item2.CurrentState = new HiddenState();
             Console.WriteLine($"\nРендеринг");
             Console.WriteLine(list.Render());
         }
