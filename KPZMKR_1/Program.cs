@@ -6,6 +6,17 @@ namespace task5
 {
     abstract class LightNode
     {
+        public string Render()
+        {
+            OnCreated();
+            string html = OuterHTML();
+            OnRendered();
+            return html;
+        }
+
+        protected virtual void OnCreated() { }
+        protected virtual void OnRendered() { }
+
         public abstract string OuterHTML();
         public abstract string InnerHTML();
     }
@@ -18,6 +29,7 @@ namespace task5
         public override string OuterHTML() => _text;
         public override string InnerHTML() => _text;
     }
+
     class LightElementNode : LightNode
     {
         public string TagName { get; }
@@ -35,12 +47,58 @@ namespace task5
 
         public void AddChild(LightNode node) => _children.Add(node);
 
+        public IEnumerable<LightNode> GetDepthFirst()
+        {
+            yield return this;
+            foreach (var child in _children)
+            {
+                if (child is LightElementNode element)
+                {
+                    foreach (var n in element.GetDepthFirst()) yield return n;
+                }
+                else
+                {
+                    yield return child;
+                }
+            }
+        }
+
+        public IEnumerable<LightNode> GetBreadthFirst()
+        {
+            Queue<LightNode> queue = new Queue<LightNode>();
+            queue.Enqueue(this);
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                yield return current;
+
+                if (current is LightElementNode element)
+                {
+                    foreach (var child in element._children)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+        }
+
+        protected override void OnCreated()
+        {
+            Console.WriteLine($"[Hook] Створено елемент: {TagName}");
+        }
+
+        protected override void OnRendered()
+        {
+            Console.WriteLine($"[Hook] Зрендерено елемент: {TagName}");
+        }
+
         public override string InnerHTML()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var child in _children)
             {
-                sb.Append(child.OuterHTML());
+                sb.Append(child.Render());
             }
             return sb.ToString();
         }
@@ -85,12 +143,19 @@ namespace task5
             img.CssClasses.Add("avatar");
             list.AddChild(img);
 
-            Console.WriteLine(" Вивід InnerHTML");
-            Console.WriteLine(list.InnerHTML());
+            Console.WriteLine("Ітератор в глибину ");
+            foreach (var node in list.GetDepthFirst())
+            {
+                if (node is LightElementNode el) Console.WriteLine(el.TagName);
+                if (node is LightTextNode) Console.WriteLine("text");
+            }
 
-            Console.WriteLine("\nВивід OuterHTML ");
-            Console.WriteLine(list.OuterHTML());
-
+            Console.WriteLine("\nІтератор в ширину");
+            foreach (var node in list.GetBreadthFirst())
+            {
+                if (node is LightElementNode el) Console.WriteLine(el.TagName);
+                if (node is LightTextNode) Console.WriteLine("text");
+            }
         }
     }
 }
