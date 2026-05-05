@@ -1,0 +1,14 @@
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\bin\Debug\net8.0\KPZMKR_1.exe
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\bin\Debug\net8.0\KPZMKR_1.deps.json
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\bin\Debug\net8.0\KPZMKR_1.runtimeconfig.json
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\bin\Debug\net8.0\KPZMKR_1.dll
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\bin\Debug\net8.0\KPZMKR_1.pdb
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.AssemblyInfoInputs.cache
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.AssemblyInfo.cs
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.csproj.CoreCompileInputs.cache
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.dll
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\refint\KPZMKR_1.dll
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.pdb
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\KPZMKR_1.genruntimeconfig.cache
+C:\Users\Worker\source\repos\KPZMKR_1\KPZMKR_1\obj\Debug\net8.0\ref\KPZMKR_1.dll
