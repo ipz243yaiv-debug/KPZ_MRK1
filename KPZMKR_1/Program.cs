@@ -17,6 +17,32 @@ namespace task5
         public void Visit(LightTextNode text) { }
     }
 
+    interface ICommand
+    {
+        void Execute();
+    }
+
+    class AddClassCommand : ICommand
+    {
+        private readonly LightElementNode _node;
+        private readonly string _className;
+
+        public AddClassCommand(LightElementNode node, string className)
+        {
+            _node = node;
+            _className = className;
+        }
+
+        public void Execute()
+        {
+            if (!_node.CssClasses.Contains(_className))
+            {
+                _node.CssClasses.Add(_className);
+                Console.WriteLine($"[Command] Додано клас '{_className}' до тегу <{_node.TagName}>");
+            }
+        }
+    }
+
     abstract class LightNode
     {
         public abstract void Accept(IVisitor visitor);
@@ -62,6 +88,7 @@ namespace task5
             visitor.Visit(this);
             foreach (var child in _children) child.Accept(visitor);
         }
+
 
         public IEnumerable<LightNode> GetDepthFirst()
         {
@@ -111,13 +138,20 @@ namespace task5
             list.AddChild(item1);
             list.AddChild(item2);
 
+            ICommand addListClass = new AddClassCommand(list, "main-list");
+            ICommand addRedText = new AddClassCommand(item1, "red-text");
+
+            addListClass.Execute();
+            addRedText.Execute();
+
+
             var stats = new StatisticsVisitor();
             list.Accept(stats);
 
-            Console.WriteLine($"Статистика");
+            Console.WriteLine($"\nСтатистика");
             Console.WriteLine($"Кількість HTML-тегів: {stats.ElementsCount}");
 
-            Console.WriteLine($"\n Ітерація (DFS)");
+            Console.WriteLine($"\nІтерація (DFS)");
             foreach (var node in list.GetDepthFirst())
             {
                 if (node is LightElementNode el) Console.WriteLine($"Знайдено тег: {el.TagName}");
