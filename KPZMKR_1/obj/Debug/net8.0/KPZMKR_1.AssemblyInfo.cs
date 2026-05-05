@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KPZMKR_1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cdfc9c3e73386d6e43d619c37e60daabfdc8d7a0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed276f55adfab336711b35a030601b43c9138f97")]
 [assembly: System.Reflection.AssemblyProductAttribute("KPZMKR_1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KPZMKR_1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -4,8 +4,22 @@ using System.Text;
 
 namespace task5
 {
+    interface IVisitor
+    {
+        void Visit(LightElementNode element);
+        void Visit(LightTextNode text);
+    }
+
+    class StatisticsVisitor : IVisitor
+    {
+        public int ElementsCount { get; private set; }
+        public void Visit(LightElementNode element) => ElementsCount++;
+        public void Visit(LightTextNode text) { }
+    }
+
     abstract class LightNode
     {
+        public abstract void Accept(IVisitor visitor);
         public string Render()
         {
             OnCreated();
@@ -13,10 +27,8 @@ namespace task5
             OnRendered();
             return html;
         }
-
         protected virtual void OnCreated() { }
         protected virtual void OnRendered() { }
-
         public abstract string OuterHTML();
         public abstract string InnerHTML();
     }
@@ -25,7 +37,7 @@ namespace task5
     {
         private string _text;
         public LightTextNode(string text) => _text = text;
-
+        public override void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string OuterHTML() => _text;
         public override string InnerHTML() => _text;
     }
@@ -33,56 +45,39 @@ namespace task5
     class LightElementNode : LightNode
     {
         public string TagName { get; }
-        public string DisplayType { get; }
-        public bool IsSingle { get; }
         public List<string> CssClasses { get; } = new List<string>();
         private List<LightNode> _children = new List<LightNode>();
 
-        public LightElementNode(string tagName, string displayType, bool isSingle)
-        {
-            TagName = tagName;
-            DisplayType = displayType;
-            IsSingle = isSingle;
-        }
+        public LightElementNode(string tagName) => TagName = tagName;
 
         public void AddChild(LightNode node) => _children.Add(node);
-
-        protected override void OnCreated()
+        public override void Accept(IVisitor visitor)
         {
-            Console.WriteLine($"[Hook] Створено елемент: {TagName}");
+            visitor.Visit(this);
+            foreach (var child in _children) child.Accept(visitor);
         }
 
-        protected override void OnRendered()
+        public IEnumerable<LightNode> GetDepthFirst()
         {
-            Console.WriteLine($"[Hook] Зрендерено елемент: {TagName}");
+            yield return this;
+            foreach (var child in _children)
+            {
+                if (child is LightElementNode el) foreach (var n in el.GetDepthFirst()) yield return n;
+                else yield return child;
+            }
         }
 
         public override string InnerHTML()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var child in _children)
-            {
-                sb.Append(child.Render());
-            }
+            foreach (var child in _children) sb.Append(child.Render());
             return sb.ToString();
         }
 
         public override string OuterHTML()
         {
-            StringBuilder sb = new StringBuilder();
             string classes = CssClasses.Count > 0 ? $" class=\"{string.Join(" ", CssClasses)}\"" : "";
-
-            if (IsSingle)
-            {
-                sb.Append($"<{TagName}{classes}/>");
-            }
-            else
-            {
-                sb.Append($"<{TagName}{classes}>");
-                sb.Append(InnerHTML());
-                sb.Append($"</{TagName}>");
-            }
-            return sb.ToString();
+            return $"<{TagName}{classes}>{InnerHTML()}</{TagName}>";
         }
     }
 
@@ -91,23 +86,15 @@ namespace task5
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            var list = new LightElementNode("ul");
+            var item = new LightElementNode("li");
+            item.AddChild(new LightTextNode("Текст"));
+            list.AddChild(item);
 
-            LightElementNode list = new LightElementNode("ul", "block", false);
-            list.CssClasses.Add("main-list");
+            var stats = new StatisticsVisitor();
+            list.Accept(stats);
 
-            for (int i = 1; i <= 3; i++)
-            {
-                LightElementNode item = new LightElementNode("li", "block", false);
-                item.CssClasses.Add("list-item");
-                item.AddChild(new LightTextNode($"Елемент списку №{i}"));
-                list.AddChild(item);
-            }
-
-            LightElementNode img = new LightElementNode("img", "inline", true);
-            img.CssClasses.Add("avatar");
-            list.AddChild(img);
-
-            Console.WriteLine("Вивід через Render (Шаблонний метод):");
+            Console.WriteLine($"Кількість тегів: {stats.ElementsCount}");
             Console.WriteLine(list.Render());
         }
     }
