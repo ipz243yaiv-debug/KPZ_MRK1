@@ -6,6 +6,17 @@ namespace task5
 {
     abstract class LightNode
     {
+        public string Render()
+        {
+            OnCreated();
+            string html = OuterHTML();
+            OnRendered();
+            return html;
+        }
+
+        protected virtual void OnCreated() { }
+        protected virtual void OnRendered() { }
+
         public abstract string OuterHTML();
         public abstract string InnerHTML();
     }
@@ -18,6 +29,7 @@ namespace task5
         public override string OuterHTML() => _text;
         public override string InnerHTML() => _text;
     }
+
     class LightElementNode : LightNode
     {
         public string TagName { get; }
@@ -35,12 +47,22 @@ namespace task5
 
         public void AddChild(LightNode node) => _children.Add(node);
 
+        protected override void OnCreated()
+        {
+            Console.WriteLine($"[Hook] Створено елемент: {TagName}");
+        }
+
+        protected override void OnRendered()
+        {
+            Console.WriteLine($"[Hook] Зрендерено елемент: {TagName}");
+        }
+
         public override string InnerHTML()
         {
             StringBuilder sb = new StringBuilder();
             foreach (var child in _children)
             {
-                sb.Append(child.OuterHTML());
+                sb.Append(child.Render());
             }
             return sb.ToString();
         }
@@ -85,12 +107,8 @@ namespace task5
             img.CssClasses.Add("avatar");
             list.AddChild(img);
 
-            Console.WriteLine(" Вивід InnerHTML");
-            Console.WriteLine(list.InnerHTML());
-
-            Console.WriteLine("\nВивід OuterHTML ");
-            Console.WriteLine(list.OuterHTML());
-
+            Console.WriteLine("Вивід через Render (Шаблонний метод):");
+            Console.WriteLine(list.Render());
         }
     }
 }
